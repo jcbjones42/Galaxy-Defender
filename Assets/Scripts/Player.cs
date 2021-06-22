@@ -4,16 +4,39 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    // Start is called before the first frame update
+    [SerializeField]
+    private float _speed = 5f;
+
+    
     void Start()
     {
-        //take the current position = new posistion (0, 0, 0)
         transform.position = new Vector3(0, 0, 0);
     }
 
-    // Update is called once per frame
+    
     void Update()
-    {           //new Vector3(-5, 0, 0) * 5 * realtime
-        transform.Translate(Vector3.right * 5 * Time.deltaTime);
+    {
+        CalculateMovement();
+    }
+
+    void CalculateMovement()
+    {
+        float horizontalInput = Input.GetAxis("Horizontal");
+        float verticalInput = Input.GetAxis("Vertical");
+
+        transform.Translate(Vector3.right * horizontalInput * _speed * Time.deltaTime);
+        
+        transform.Translate(Vector3.up * verticalInput * _speed * Time.deltaTime);
+
+        transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -2.15f, 7.7f), 0);
+
+        if (transform.position.x >= 11.3f)
+        {
+            transform.position = new Vector3(-11.3f, transform.position.y, 0);
+        }
+        else if (transform.position.x <= -11.3f)
+        {
+            transform.position = new Vector3(11.3f, transform.position.y, 0);
+        }
     }
 }
